@@ -5,7 +5,8 @@
 #' @param input_data the data.frame of recording information
 #' @param probs A vector of two proportions giving the positions of the start and end of summer. Default value of 0.025 and 0.975 mean that the central 95 percent of day in any year is classed as the recording period.
 #' @param date_col the name of the column that contains the date. This must be formatted as a date
-#'
+#' @param ignore_year A logical value determining whether the primary recording period is calculated across all years in the data, as opposed to annually, if this parameter is provided. The default ignore_year = FALSE will return the annual primary recording period.
+#' 
 #' @export
 #' 
 #' @examples
@@ -32,17 +33,18 @@
 #' 
 #' @return Only data identified as from the the primary recording period (e.g. summer) is returned. Three additional columns are returned.
 #' \itemize{
-#'  \item{\code{Jday} - }{The day of the year as a numeric value, the first day of the year being 1, the second 2 and so on}
+#'  \item{\code{Jday} - }{The day of the year as a numeric value, the first day of the year being 1, the second 2 and so on. If ignore_year = TRUE, NA will be returned.}
 #'  \item{\code{year} - }{The year of the record in the format YYYY}
 #'  \item{\code{summer} - }{Logical, does this record fall in the summer period (i.e. the annual period of heightened recording)}
 #' }
 #' 
-#' The returned object has an attribute \code{cutoffs} which details the days (\code{Jday}) used as the first and last days of summer in each year. 
+#' The returned object has an attribute \code{cutoffs} which details the days (\code{Jday}) used as the first and last days of summer in each year. If ignore_year = TRUE, the first and last days of summer across years will be returned. 
 
 
 summerData <- function(input_data,
                        probs = c(0.025, 0.975),
-                       date_col = 'date_start'){
+                       date_col = 'date_start',
+                       ignore_year = FALSE){
   
   # check date column
   if(!inherits(input_data[, date_col], 'Date')){
@@ -67,7 +69,11 @@ summerData <- function(input_data,
   
   qsf <- qsl <- NULL  
   
-  # now for each year loop through and create an 
+  # Is ignore_year = FALSE? I.e. should summer period be calculated annually?
+  if(isFALSE(ignore_year)){
+    
+  # if ignore_year = FALSE
+  # loop through each year and create an 
   # index column
   for(i in sort(unique(input_data$year))){
     
@@ -78,10 +84,27 @@ summerData <- function(input_data,
                 & input_data$Jday <= year_quantiles[2] 
                 & input_data$year == i] <- TRUE
   }
-  
-  summer_data <- input_data[input_data$summer, ]
-  attr(summer_data, 'cutoffs') <- data.frame(year = sort(unique(input_data$year)),
-                                             quantile_first = qsf,
-                                             quantile_last = qsl)  
+    
+    summer_data <- input_data[input_data$summer, ]
+    attr(summer_data, 'cutoffs') <- data.frame(year = sort(unique(input_data$year)),
+                                               quantile_first = qsf,
+                                               quantile_last = qsl) 
+    
+    
+    # If ignore_year = TRUE, calculate summer period across years
+  } else if(isTRUE(ignore_year)){
+    year_quantiles <- quantile(input_data$Jday, probs = probs)
+    qsf <- c(qsf, year_quantiles[1])
+    qsl <- c(qsl, year_quantiles[2])
+    input_data$summer[input_data$Jday >= year_quantiles[1]
+                      & input_data$Jday <= year_quantiles[2]] <- TRUE
+      
+    
+    summer_data <- input_data[input_data$summer, ]
+    attr(summer_data, 'cutoffs') <- data.frame(quantile_first = qsf,
+                                               quantile_last = qsl)  
+    
+    }
+
   return(summer_data)
 }
