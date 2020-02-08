@@ -45,6 +45,7 @@
 #'  \item{\code{activity_ratio} - }{The proportion of days on which the volunteer was active in relation to the total days he/she remained linked to the project (i.e. \code{active_days} / \code{duration}. Duration is either the number of days elapsed from their first to last record, or if \code{summer_days} is provided it is the the number of days elapsed from their first to last record that fall into the summer periods)}
 #'  \item{\code{total_duration} - }{The total number of days the volunteer was involved in the project, calculated as the number of days from the first record they submitted to the last (inclusive)}
 #'  \item{\code{active_days} - }{The total number of unique dates on which observations were made}
+#'  \item{\code{active_years} - }{The total number of unique years on which observations were made}
 #' }
 
 activityRatio <-
