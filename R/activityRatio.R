@@ -72,7 +72,8 @@ function(recorder_name,
     return(data.frame(recorder = recorder_name,
                       activity_ratio = NA,
                       total_duration = NA,
-                      active_days = NA))
+                      active_days = NA,
+                      active_years = NA))
   } else {
     
   # Get unique dates
@@ -89,6 +90,9 @@ function(recorder_name,
     
     # calculate ratio
     activity_ratio <- length(dates)/duration
+    
+    # calculate the number of active years
+    active_years <- (as.numeric(format(first_last[2],'%Y')) - as.numeric(format(first_last[1],'%Y')) + 1)
     
   } else {
     
@@ -117,6 +121,9 @@ function(recorder_name,
     # calculate ratio
     activity_ratio <- length(dates)/summer_duration
     
+    # calculate the number of active years
+    active_years <- (as.numeric(format(first_last[2],'%Y')) - as.numeric(format(first_last[1],'%Y')) + 1)
+    
   }
     
   # return
@@ -124,6 +131,7 @@ function(recorder_name,
                     activity_ratio = activity_ratio,
                     total_duration = duration,
                     summer_duration = summer_duration,
-                    active_days = length(dates)))
+                    active_days = length(dates),
+                    active_years = active_years))
   }
 }
