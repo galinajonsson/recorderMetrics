@@ -44,7 +44,7 @@
 summerData <- function(input_data,
                        probs = c(0.025, 0.975),
                        date_col = 'date_start',
-                       ignore_year = FALSE){
+                       ignore_year = TRUE){
   
   # check date column
   if(!inherits(input_data[, date_col], 'Date')){
