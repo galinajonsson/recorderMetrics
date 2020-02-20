@@ -51,7 +51,7 @@
 #'  \item{\code{active_years} - }{The total number of unique years on which observations were made}
 #' }
 
-activityRatio2 <-
+activityRatio <-
   function(recorder_name,
            data,
            recorder_col = 'recorders',
