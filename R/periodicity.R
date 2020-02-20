@@ -65,7 +65,7 @@ periodicity <- function(recorder_name,
   data <- data[data[,recorder_col] == recorder_name, ]
   
   # Get unique dates as dates
-  dates <- sort(unique(data[,date_col]))
+  dates <- as.Date(sort(unique(data[,date_col])))
   
   # we cannot calculate these metrics if people have very few
   # dates on which they record
