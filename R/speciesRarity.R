@@ -6,6 +6,7 @@
 #' @param data the data.frame of recording information
 #' @param sp_col the name of the column that contains the species names
 #' @param recorder_col the name of the column that contains the recorder names
+#' @param set_spp_rank option to provide separate species rarity ranking, e.g. if data is know to be biased and unbiased data exists. Default is NULL, i.e. the data parameter is used. If not NULL, this must be a named numerical vector with all taxa ranked from most to least rare and scaled to 100 (100 is the most rare taxa). 
 #'
 #' @export
 #' 
@@ -60,13 +61,21 @@ speciesRarity <-
 function(recorder_name,
          data, 
          sp_col = 'preferred_taxon',
-         recorder_col = 'recorders'){
+         recorder_col = 'recorders',
+         set_spp_rank = NULL){
   
+  if(is.null(set_spp_rank)){
   data <- data[,c(sp_col, recorder_col)]
   rank_species <- rank(abs(table(data[,sp_col])-max(table(data[,sp_col]))))
   
   # scale ranks to 100
   rank_species <- (rank_species/max(rank_species)) * 100
+  
+  } else if (!is.null(set_spp_rank)){
+    
+    rank_species <- set_spp_rank
+ 
+  }
   
   sp_counts <- table(data[,sp_col])
   
