@@ -46,17 +46,17 @@ recorderVisits <-
                             sep = '_')
     
     # Find the number of unique visits per recorder
-    visits <- length(unique(rec_data$visit))
+    visits <- length(rec_data$visit)
     
     # Find the sites that have been visited more than once and make a temp df
     revisSites <- as.data.frame(rec_data %>% group_by(rec_data[ , location_col]) %>%
                                   tally())
     
     # Fins the number of unique sited visited by the recorder
-    sites <- length(unique(revisSites[,1]))
+    sites <- length(unique(rec_data[ , location_col]))
     
     # Find the proportion of total sites visited that have been revisited (visited more than once) by the recorder
-    sitesRevisited <- (nrow(subset(revisSites, n>1)))/(length(unique(rec_data[ , "km10grid"])))
+    sitesRevisited <- (nrow(subset(revisSites, n>1)))/(length(unique(rec_data[ , location_col])))
     
     # Find the mean number of revisits per site per recorder
     meanRevisits <- mean((subset(revisSites, n>1))$n)
