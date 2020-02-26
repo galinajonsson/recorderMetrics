@@ -7,27 +7,46 @@
 #' @param date_col the name of the column that contains the date. This must be formatted as a date
 #' @param recorder_col the name of the column that contains the recorder names
 #' @param location_col the name of the column that contains the location. This is a character, such as a grid reference and should be representative of the scale at which recording is done over a single day, typically 1km-square is used.
-#' @param summer_days Revisit metrics is only calculated for the summmer period is this parameter is provided. This is a three column data.frame: year, Jday_start (numeric Julian day of the first day of summer), Jday_end (numeric Julian day of the last day of summer). These are returned as an attribute from \code{summerData}.
-#'     
+#' 
 #' @export
 #' @import dplyr
 #' 
 #' @examples
 #' \dontrun{
 #' 
-#' INSERT EXAMPLES
+#' # load example data
+#' head(cit_sci_data)
 #' 
-#' 
+#' # Run for a single recorder
+#' RV <- recorderVisits(recorder_name = 3007,
+#'                      data = cit_sci_data,
+#'                      date_col = 'date',
+#'                      recorder_col = 'recorder',
+#'                      location_col = 'location')
+#'                    
+#'                    
+#'                    
+#' # Run the metric for all recorders
+#' RV_all <- lapply(unique(cit_sci_data$recorder),
+#'                  FUN = recorderVisits,
+#'                  data = cit_sci_data,
+#'                  date_col = 'date',
+#'                  recorder_col = 'recorder',
+#'                  location_col = 'location')
+#'
+#' # summarise as one table
+#' RV_all_sum <- do.call(rbind, RV_all)
+#'
 #' }
 #' 
-#' @return A data.frame with seven columns
+#' @return A data.frame with six columns
 #' \itemize{
 #'  \item{\code{recorder} - }{The name of the recorder, as given in the recorder_name argument}
-#'  \item{\code{visits} - }{}
-#'  \item{\code{sites} - }{}
-#'  \item{\code{PropRevisited} - }{}
-#'  \item{\code{meanRevisits} - }{}
-#'  \item{\code{SD_meanRevisits} - }{}
+#'  \item{\code{visits} - }{the total number of visits per recorder}
+#'  \item{\code{sites} - }{The total number of sites visited by the recorder}
+#'  \item{\code{PropRevisited} - }{The proportion of total sites visited that have been revisited, i.e. visited more than once, by the recorder}
+#'  \item{\code{meanRevisits} - }{The mean number of visits per site per recorder for sites visited more than once.}
+#'  \item{\code{SD_meanRevisits} - }{The standard deviation of the mean number of visits per site per recorder for sites visited more than once.}
 #' }
 
 recorderVisits <-
@@ -35,8 +54,22 @@ recorderVisits <-
            data,
            date_col = 'dates',
            recorder_col = 'recorders',
-           location_col = 'kmsq',
-           summer_days = NULL){
+           location_col = 'location'){
+    
+    # check date column
+    if(!inherits(data[, date_col], 'Date')){
+      stop('Your date column is not a date')
+    }
+    
+    # check name
+    if(!recorder_name %in% data[,recorder_col]) {
+      stop(paste(recorder_name, 'does not appear in the recorder column of your data'))
+    }
+    
+    # check location
+    if(!inherits(data[, location_col], 'Character')) {
+      stop('Your location column is not a character')
+    }
     
     # get the data for this recorder
     rec_data <- data[data[ ,recorder_col] == recorder_name, ]
