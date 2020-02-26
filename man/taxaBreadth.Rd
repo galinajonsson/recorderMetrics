@@ -5,7 +5,7 @@
 \title{Metrics identifying the breadth and proportion of taxa recorded}
 \usage{
 taxaBreadth(recorder_name, data, sp_col = "preferred_taxon",
-  recorder_col = "recorders")
+  recorder_col = "recorders", set_taxa_breadth = NULL)
 }
 \arguments{
 \item{recorder_name}{the name of the recorder for whom you want to calculate the metrics}
@@ -15,6 +15,8 @@ taxaBreadth(recorder_name, data, sp_col = "preferred_taxon",
 \item{sp_col}{the name of the column that contains the species names}
 
 \item{recorder_col}{the name of the column that contains the recorder names}
+
+\item{set_taxa_breadth}{optional integer that defines the taxa breadth and is applied to all recorders. Default is FALSE, i.e. total number of species recorded is found for each individual recorder}
 }
 \value{
 A data.frame with four columns is returned.

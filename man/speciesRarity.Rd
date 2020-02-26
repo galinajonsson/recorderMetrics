@@ -5,7 +5,7 @@
 \title{Calculate the rarity of species recorded by a volunteer}
 \usage{
 speciesRarity(recorder_name, data, sp_col = "preferred_taxon",
-  recorder_col = "recorders")
+  recorder_col = "recorders", set_spp_rank = NULL)
 }
 \arguments{
 \item{recorder_name}{the name of the recorder for whom you want to calculate the metrics}
@@ -15,6 +15,8 @@ speciesRarity(recorder_name, data, sp_col = "preferred_taxon",
 \item{sp_col}{the name of the column that contains the species names}
 
 \item{recorder_col}{the name of the column that contains the recorder names}
+
+\item{set_spp_rank}{option to provide separate species rarity ranking, e.g. if data is know to be biased and unbiased data exists. Default is NULL, i.e. the data parameter is used. If not NULL, this must be a named numerical vector with all taxa ranked from most to least rare and scaled to 100 (100 is the most rare taxa).}
 }
 \value{
 A data.frame with seven columns

@@ -5,7 +5,9 @@
 \title{Calculate activity ratio metrics}
 \usage{
 activityRatio(recorder_name, data, recorder_col = "recorders",
-  date_col = "date_start", summer_days = NULL)
+  date_col = "date_start", summer_days = NULL,
+  specify_duration = FALSE, duration_start = NULL,
+  duration_end = NULL)
 }
 \arguments{
 \item{recorder_name}{the name of the recorder for whom you want to calculate the metrics}
@@ -17,6 +19,12 @@ activityRatio(recorder_name, data, recorder_col = "recorders",
 \item{date_col}{the name of the column that contains the date. This must be formatted as a date}
 
 \item{summer_days}{Activity ratio is only calculated for the summmer period is this parameter is provided. This is a three column data.frame: year, Jday_start (numeric Julian day of the first day of summer), Jday_end (numeric Julian day of the last day of summer). These are returned as an attribute from \code{summerData}.}
+
+\item{specify_duration}{A logical value determining whether total duration is specified and thus identical for all recorders. The default specify_duration = FALSE will return each participant's total duration as the number of days between the first and last observation}
+
+\item{duration_start}{If specify_duration = TRUE, enter a numeric start day of total duration as numeric Julian day}
+
+\item{duration_end}{If specify_duration = TRUE, enter a numeric end day of total duration as numeric Julian day}
 }
 \value{
 A data.frame with four columns
@@ -25,6 +33,7 @@ A data.frame with four columns
  \item{\code{activity_ratio} - }{The proportion of days on which the volunteer was active in relation to the total days he/she remained linked to the project (i.e. \code{active_days} / \code{duration}. Duration is either the number of days elapsed from their first to last record, or if \code{summer_days} is provided it is the the number of days elapsed from their first to last record that fall into the summer periods)}
  \item{\code{total_duration} - }{The total number of days the volunteer was involved in the project, calculated as the number of days from the first record they submitted to the last (inclusive)}
  \item{\code{active_days} - }{The total number of unique dates on which observations were made}
+ \item{\code{active_years} - }{The total number of unique years on which observations were made}
 }
 }
 \description{
